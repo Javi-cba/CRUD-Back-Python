@@ -34,26 +34,31 @@ async def post_usuarios(request: Request):
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 @router.put("/put")
 async def put_usuarios(req: Request):
     try:
-        data=await req.json()
-        id = req.query_params.get("id") 
+        data = await req.json()  
+        id = req.query_params.get("id")
         object_id = ObjectId(id)
 
         if not id:
             return JSONResponse(content={"error": "No se ha proporcionado un ID"}, status_code=status.HTTP_400_BAD_REQUEST)
-        user= await usuariosCollection.find_one({"_id":object_id})
-        if not user: 
-            return JSONResponse(content={"error":"No se ha encontraddo un usuario con ese ID"}, status_code=status.HTTP_404_NOT_FOUND)
+        
+        user =  usuariosCollection.find_one({"_id": object_id}) 
+
+        # Verificar si el usuario existe
+        if not user:
+            return JSONResponse(content={"error": "No se ha encontrado un usuario con ese ID"}, status_code=status.HTTP_404_NOT_FOUND)
+        
         if not data:
             return JSONResponse(content={"error": "No se ha proporcionado el contenido del usuario"}, status_code=status.HTTP_400_BAD_REQUEST)
 
         usuariosCollection.update_one({"_id": object_id}, {"$set": data})
+
         return JSONResponse(content={"message": "Usuario actualizado correctamente"}, status_code=status.HTTP_200_OK)
+
     except Exception as e:
-        return JSONResponse(content={"error":str(e)},status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return JSONResponse(content={"error": str(e)}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @router.delete("/delete")
 async def delete_usuarios(req:Request):
@@ -63,7 +68,7 @@ async def delete_usuarios(req:Request):
     try:
         if not id:
             return JSONResponse(content={"error": "No se ha proporcionado un ID"}, status_code=status.HTTP_400_BAD_REQUEST)
-        user= await usuariosCollection.find_one({"_id":object_id})
+        user= usuariosCollection.find_one({"_id":object_id})
         if not user: 
             return JSONResponse(content={"error":"No se ha encontraddo un usuario con ese ID o ya ha sido eliminado"}, status_code=status.HTTP_404_NOT_FOUND)
         
