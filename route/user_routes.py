@@ -74,7 +74,7 @@ async def delete_usuarios(req:Request):
         
 
         usuariosCollection.delete_one({"_id":object_id})
-        return JSONResponse(content={"message": "Usuario actualizado correctamente"}, status_code=status.HTTP_200_OK)
+        return JSONResponse(content={"message": "Usuario eliminaddo correctamente"}, status_code=status.HTTP_200_OK)
     
     except Exception as e:
             return JSONResponse(content={"error":str(e)},status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
