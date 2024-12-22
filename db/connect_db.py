@@ -5,28 +5,26 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
+
 # URI de conexión
 MONGO_URI = os.getenv("MONGO_URI")
 
+# Variable global para el cliente
+client = None
+
 def connect_db():
-    client = None
-    try:
-        # Intentamos conectar al cliente de MongoDB
-        client = MongoClient(MONGO_URI, tlsAllowInvalidCertificates=True)
-        
-        client.admin.command('ping') 
-        db = client["test"]
-        
-        collections = db.list_collection_names()
-        print(f"Conexión exitosa a la base de datos. Colecciones disponibles: {collections}")
-        
-        return db
-    except Exception as e:
-        print(f"Error al conectar a MongoDB: {e}")
-        raise
-    finally:
-        if client:
-            client.close()
+    global client
+    if client is None:
+        try:
+            # Crear una conexión global al cliente de MongoDB
+            client = MongoClient(MONGO_URI, tlsAllowInvalidCertificates=True)
+            client.admin.command('ping')  # Comprobar conexión
+            print("Conexión exitosa a MongoDB")
+        except Exception as e:
+            print(f"Error al conectar a MongoDB: {e}")
+            raise
+    # Retornar la base de datos específica
+    return client["test"]
 
 def serialize_mongo_data(data):
     """Función para convertir los objetos MongoDB a un formato estándar (JSON válido)."""
