@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from route.user_routes import router as user_router  
 from dotenv import load_dotenv
 load_dotenv()
@@ -8,6 +9,12 @@ load_dotenv()
 PORT=os.getenv("PORT")
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],  
+)
 
 
 @app.get("/", status_code=status.HTTP_200_OK)
