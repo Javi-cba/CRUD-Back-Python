@@ -1,7 +1,11 @@
+import os
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from db.connect_db import connect_db, serialize_mongo_data
+from dotenv import load_dotenv
+load_dotenv()
 
+PORT=os.getenv("PORT")
 
 app = FastAPI()
 
@@ -26,3 +30,9 @@ async def get_usuarios():
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", PORT)) 
+    uvicorn.run(app, host="0.0.0.0", port=port)
