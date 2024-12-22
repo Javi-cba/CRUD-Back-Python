@@ -14,7 +14,6 @@ def connect_db():
         # Intentamos conectar al cliente de MongoDB
         client = MongoClient(MONGO_URI, tlsAllowInvalidCertificates=True)
         
-        # Verificamos si la conexión es exitosa
         client.admin.command('ping') 
         db = client["test"]
         
