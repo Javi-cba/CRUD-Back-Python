@@ -17,6 +17,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.head("/", status_code=status.HTTP_200_OK)
+async def root_head():
+    return JSONResponse(content=None, headers={"Content-Type": "application/json"})
+
 
 @app.get("/", status_code=status.HTTP_200_OK)
 async def root():
